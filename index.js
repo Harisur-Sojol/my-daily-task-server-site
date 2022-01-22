@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = "mongodb+srv://creatingTask:zRrnNFvs5QjGblZ3@cluster0.ptx5l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ptx5l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -25,14 +25,12 @@ async function run(){
         const database = client.db("my_daily_task")
         const taskCollection = database.collection('tasks')
 
-
         // Get Task Api
         app.get('/tasks', async (req, res)=> {
             const cursor = taskCollection.find({});
             const tasks = await cursor.toArray();
             res.send(tasks);
         })
-
 
         // Post/Add Task
         app.post('/addingTask', async (req, res)=> {
